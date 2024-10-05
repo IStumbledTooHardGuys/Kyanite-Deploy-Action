@@ -1,23 +1,20 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Notify Kyanite to Deploy'
+description: 'The package posts to the Kyanite webhook to notify of a push.'
+author: 'MainframeDev'
 
-# Add your action's branding here. This will appear on the GitHub Marketplace.
-branding:
-  icon: 'heart'
-  color: 'red'
-
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  secret_key:
+    description: 'The key which will be used for the X-Kyanite-Deployment-Security header.'
     required: true
-    default: '1000'
 
-# Define your outputs here.
-outputs:
-  time:
-    description: 'Your output description here'
+  host:
+    description: 'The Kyanite deploy route root.'
+    required: true
+    default: 'https://server.stumblepriv.xyz/kyanite/api/deploy'
+
+  slug:
+    description: 'Slug of the workflow we want to execute. Defined in Slugs.yaml of the destination host.'
+    required: true
 
 runs:
   using: node20

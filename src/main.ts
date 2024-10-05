@@ -1,26 +1,22 @@
 import * as core from '@actions/core'
-import { wait } from './wait'
+import axios from 'axios';
 
-/**
- * The main function for the action.
- * @returns {Promise<void>} Resolves when the action is complete.
- */
 export async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
+    const key: string = core.getInput('secret_key')
+    const host: string = core.getInput('host')
+    const slug: string = core.getInput('slug')
 
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Waiting ${ms} milliseconds ...`)
+    core.info("Attempting to inform Kyanite on " + host);
 
-    // Log the current timestamp, wait, then log the new timestamp
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    const res = await axios.post(`${host}/${slug}`, undefined, {
+      headers: {
+        "X-Kyanite-Deployment-Security": key
+      }
+    });
 
-    // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
+    core.info(`${res.status} ${res.statusText}: ${res.data}`);
   } catch (error) {
-    // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
   }
 }
